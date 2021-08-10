@@ -16,6 +16,17 @@
             Convert
           </button>
         </div>
+        <div v-show="speechEvents.length > 0" class="field">
+          <button class="button is-info is-fullwidth" :disabled="summed" @click="sum">
+            Get Total Time
+          </button>
+        </div>
+        <div class="field">
+          <label class="checkbox is-unselectable">
+            <input v-model="removeNull" type="checkbox">
+            Remove Null references
+          </label>
+        </div>
       </div>
       <div class="section">
         <h2 class="subtitle">
@@ -44,7 +55,9 @@ export default {
     return {
       input: '',
       error: '',
-      speechEvents: []
+      speechEvents: [],
+      summed: false,
+      removeNull: true
     }
   },
 
@@ -53,21 +66,38 @@ export default {
       try {
         this.speechEvents = []
         this.error = ''
+        this.summed = false
 
-        const result = JSON.parse(this.input)
+        const parsed = JSON.parse(this.input)
+        const filtered = []
 
-        result.forEach((event, index) => {
-          if (index < result.length - 1) {
-            this.speechEvents.push({
-              speaker: event.speakerName || 'Null',
-              duration: Math.max((result[index + 1].timestamp - event.timestamp) / 1000, 0),
-              key: Math.floor(Math.random() * Date.now())
-            })
-          }
-        })
+        parsed
+          .filter((e) => {
+            return e.eventType === 'startSpeech' || e.eventType === 'stopSpeech'
+          })
+          .forEach((e, index) => {
+            if (this.removeNull && e.speakerName == null) {
+              return
+            }
+
+            if (index < parsed.length - 1) {
+              filtered.push({
+                speaker: `${e.speakerName}`,
+                duration: (parsed[index + 1].timestamp - e.timestamp) / 1000,
+                key: Math.floor(Math.random() * Date.now())
+              })
+            }
+          })
+
+        this.speechEvents = JSON.parse(JSON.stringify(filtered))
       } catch (e) {
         this.error = e.toString()
       }
+    },
+
+    sum () {
+      this.speechEvents = JSON.parse(JSON.stringify(Array.from(this.speechEvents.reduce((m, { speaker, duration }) => m.set(speaker, (m.get(speaker) || 0) + duration), new Map()), ([speaker, duration]) => ({ speaker, duration }))))
+      this.summed = true
     }
   }
 }
