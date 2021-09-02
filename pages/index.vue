@@ -30,12 +30,27 @@
       </div>
       <div class="section">
         <h2 class="subtitle">
+          Item Rankings
+        </h2>
+        <p v-if="items.length <= 0">
+          Item rankings will be listed here
+        </p>
+        <div class="content">
+          <ol type="1">
+            <Item v-for="item in items" :key="item.name" :name="item.name" :rank="item.rank" />
+          </ol>
+        </div>
+      </div>
+      <div class="section">
+        <h2 class="subtitle">
           Speech Events
         </h2>
         <p v-if="speechEvents.length <= 0">
           Speech events will be listed here
         </p>
-        <Speech v-for="speechEvent in speechEvents" :key="speechEvent.key" :speaker="speechEvent.speaker" :duration="speechEvent.duration" />
+        <div class="content">
+          <Speech v-for="speechEvent in speechEvents" :key="speechEvent.key" :speaker="speechEvent.speaker" :duration="speechEvent.duration" />
+        </div>
       </div>
     </div>
     <footer class="footer">
@@ -56,6 +71,7 @@ export default {
       input: '',
       error: '',
       speechEvents: [],
+      items: [],
       summed: false,
       removeNull: true
     }
@@ -65,6 +81,7 @@ export default {
     convert () {
       try {
         this.speechEvents = []
+        this.items = []
         this.error = ''
         this.summed = false
 
@@ -90,6 +107,21 @@ export default {
           })
 
         this.speechEvents = JSON.parse(JSON.stringify(filtered))
+
+        parsed.forEach((e) => {
+          if (e.itemRanks) {
+            Object.values(e.itemRanks).forEach((rank, index) => {
+              this.items.push({
+                rank,
+                name: Object.keys(e.itemRanks)[index]
+              })
+            })
+          }
+        })
+
+        this.items.sort(function (a, b) {
+          return a.rank - b.rank
+        })
       } catch (e) {
         this.error = e.toString()
       }
