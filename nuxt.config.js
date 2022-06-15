@@ -8,7 +8,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'SocialVR - Tools',
+    title: 'SocialVR Tools',
     htmlAttrs: {
       lang: 'en'
     },
@@ -48,5 +48,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    babel: {
+      plugins: [
+        ['@babel/plugin-proposal-private-property-in-object', { loose: true }]
+      ]
+    }
   }
 }
