@@ -20,13 +20,41 @@
       </div>
       <div v-if="processed">
         <div class="section">
-          <h2 class="subtitle">
-            Meta Info
-          </h2>
-          <ul>
-            <li>Started: {{ new Date(started).toLocaleString() }}</li>
-            <li>Completed: {{ new Date(completed).toLocaleString() }}</li>
-          </ul>
+          <div class="columns">
+            <div class="column">
+              <h2 class="subtitle">
+                Meta Info
+              </h2>
+              <ul>
+                <li>Started: {{ new Date(started).toLocaleString() }}</li>
+                <li>Completed: {{ new Date(completed).toLocaleString() }}</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h2 class="subtitle">
+                Clock Events
+              </h2>
+              <ul>
+                <li v-for="(ce) in clock_events" :key="ce.timestamp">
+                  <div>
+                    {{ ce.displayName }} @ {{ new Date(ce.timestamp).toLocaleString() }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="column">
+              <h2 class="subtitle">
+                Phase Events
+              </h2>
+              <ul>
+                <li v-for="(pe) in phase_events" :key="pe.timestamp">
+                  <div>
+                    Phase {{ pe.phase }} @ {{ new Date(pe.timestamp).toLocaleString() }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div class="section">
@@ -96,6 +124,8 @@ export default {
       knowledge: ['', '', ''],
       skills: ['', '', ''],
       abilities: ['', '', ''],
+      clock_events: [],
+      phase_events: [],
       canidate: '',
       processed: false,
       error: ''
@@ -112,6 +142,8 @@ export default {
         this.knowledge = [...parsed.knowledge]
         this.skills = [...parsed.skills]
         this.abilities = [...parsed.abilities]
+        this.clock_events = [...parsed.clock_events]
+        this.phase_events = [...parsed.phase_events]
         this.canidate = parsed.canidate
 
         this.processed = true
