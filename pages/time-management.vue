@@ -26,19 +26,11 @@
                 Meta Info
               </h2>
               <ul>
-                <li>Started: {{ new Date(started).toLocaleString() }}</li>
-                <li>Completed: {{ new Date(completed).toLocaleString() }}</li>
-              </ul>
-            </div>
-            <div class="column">
-              <h2 class="subtitle">
-                Clock Events
-              </h2>
-              <ul>
-                <li v-for="(ce) in clock_events" :key="ce.timestamp">
-                  <div>
-                    {{ ce.displayName }} @ {{ new Date(ce.timestamp).toLocaleString() }}
-                  </div>
+                <li>
+                  <span class="has-text-weight-bold">Started: </span>{{ new Date(started).toLocaleString() }}
+                </li>
+                <li>
+                  <span class="has-text-weight-bold">Completed: </span> {{ new Date(completed).toLocaleString() }}
                 </li>
               </ul>
             </div>
@@ -49,7 +41,19 @@
               <ul>
                 <li v-for="(pe) in phase_events" :key="pe.timestamp">
                   <div>
-                    Phase {{ pe.phase }} @ {{ new Date(pe.timestamp).toLocaleString() }}
+                    <span class="has-text-weight-bold">Phase {{ pe.phase }}: </span>{{ new Date(pe.timestamp).toLocaleString() }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="column is-half">
+              <h2 class="subtitle">
+                Clock Events
+              </h2>
+              <ul>
+                <li v-for="(ce) in clock_events" :key="ce.timestamp">
+                  <div>
+                    <span class="has-text-weight-bold">{{ ce.displayName || ce.sessionID }}</span> @ {{ new Date(ce.timestamp).toLocaleString() }}
                   </div>
                 </li>
               </ul>
