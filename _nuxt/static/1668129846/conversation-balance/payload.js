@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/conversation-balance", {data:[{}],fetch:{},mutations:void 0});
